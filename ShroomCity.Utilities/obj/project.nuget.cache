@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "BoVRbG9MdFBRygH2nsWBCTui1hWxxC5Ea0oIThiVK1jVSTMO2Br8RyJ0H2bxUHaJygyjP+Z/Pm9T9TOmT8hwqw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kolla\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\7.0.11\\microsoft.aspnetcore.cryptography.internal.7.0.11.nupkg.sha512",
+    "C:\\Users\\kolla\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\7.0.11\\microsoft.aspnetcore.cryptography.keyderivation.7.0.11.nupkg.sha512"
+  ],
+  "logs": []
+}

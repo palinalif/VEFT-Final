@@ -1,0 +1,12 @@
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\bin\Debug\net7.0\ShroomCity.Utilities.deps.json
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\bin\Debug\net7.0\ShroomCity.Utilities.dll
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\bin\Debug\net7.0\ShroomCity.Utilities.pdb
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.csproj.AssemblyReference.cache
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.AssemblyInfoInputs.cache
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.AssemblyInfo.cs
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.csproj.CoreCompileInputs.cache
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.dll
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\refint\ShroomCity.Utilities.dll
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ShroomCity.Utilities.pdb
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Utilities\obj\Debug\net7.0\ref\ShroomCity.Utilities.dll
