@@ -48,11 +48,14 @@ public class AccountController : ControllerBase
         return Ok();
     }
 
-    // TODO: Make sure a user is logged in before they can run this
     [HttpPost]
     [Route("profile")]
     public async Task<IActionResult> GetProfileInformation()
     {
-        return Ok(User.Claims);
+        if (User.Claims != null)
+        {
+            return Ok(User.Claims);
+        }
+        return Ok(); // TODO: Replace with appropriate status code
     }
 }
