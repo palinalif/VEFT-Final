@@ -424,7 +424,9 @@
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "7.0.12",
-          "ShroomCity.Models": "1.0.0"
+          "Microsoft.Extensions.Configuration": "7.0.0",
+          "ShroomCity.Models": "1.0.0",
+          "ShroomCity.Utilities": "1.0.0"
         },
         "compile": {
           "bin/placeholder/ShroomCity.Repositories.dll": {}
@@ -1132,8 +1134,7 @@
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 7.0.11",
       "Microsoft.Extensions.Configuration >= 7.0.0",
       "ShroomCity.Models >= 1.0.0",
-      "ShroomCity.Repositories >= 1.0.0",
-      "ShroomCity.Utilities >= 1.0.0"
+      "ShroomCity.Repositories >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1166,9 +1167,6 @@
             },
             "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Repositories\\ShroomCity.Repositories.csproj": {
               "projectPath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Repositories\\ShroomCity.Repositories.csproj"
-            },
-            "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj": {
-              "projectPath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj"
             }
           }
         }

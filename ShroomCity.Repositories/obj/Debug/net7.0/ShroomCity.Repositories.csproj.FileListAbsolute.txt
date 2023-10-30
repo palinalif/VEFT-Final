@@ -13,3 +13,5 @@ C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Repositories\obj\
 C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Repositories\obj\Debug\net7.0\refint\ShroomCity.Repositories.dll
 C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Repositories\obj\Debug\net7.0\ShroomCity.Repositories.pdb
 C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Repositories\obj\Debug\net7.0\ref\ShroomCity.Repositories.dll
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Repositories\bin\Debug\net7.0\ShroomCity.Utilities.dll
+C:\Users\kolla\OneDrive\Documents\School\VEFT\Final\ShroomCity.Repositories\bin\Debug\net7.0\ShroomCity.Utilities.pdb

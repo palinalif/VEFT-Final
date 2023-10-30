@@ -170,6 +170,9 @@
             "projectReferences": {
               "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Models\\ShroomCity.Models.csproj": {
                 "projectPath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Models\\ShroomCity.Models.csproj"
+              },
+              "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj": {
+                "projectPath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj"
               }
             }
           }
@@ -187,6 +190,10 @@
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[7.0.12, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
@@ -236,9 +243,6 @@
               },
               "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Repositories\\ShroomCity.Repositories.csproj": {
                 "projectPath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Repositories\\ShroomCity.Repositories.csproj"
-              },
-              "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj": {
-                "projectPath": "C:\\Users\\kolla\\OneDrive\\Documents\\School\\VEFT\\Final\\ShroomCity.Utilities\\ShroomCity.Utilities.csproj"
               }
             }
           }

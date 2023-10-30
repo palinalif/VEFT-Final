@@ -354,7 +354,9 @@
       "ShroomCity.Repositories/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "7.0.12",
-          "ShroomCity.Models": "1.0.0"
+          "Microsoft.Extensions.Configuration": "7.0.0",
+          "ShroomCity.Models": "1.0.0",
+          "ShroomCity.Utilities": "1.0.0"
         },
         "runtime": {
           "ShroomCity.Repositories.dll": {}
@@ -365,8 +367,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.13",
           "Microsoft.Extensions.Configuration": "7.0.0",
           "ShroomCity.Models": "1.0.0",
-          "ShroomCity.Repositories": "1.0.0",
-          "ShroomCity.Utilities": "1.0.0"
+          "ShroomCity.Repositories": "1.0.0"
         },
         "runtime": {
           "ShroomCity.Services.dll": {}

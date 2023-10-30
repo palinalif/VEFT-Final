@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ShroomCity.Repositories;
@@ -11,9 +12,11 @@ using ShroomCity.Repositories;
 namespace ShroomCity.API.Migrations
 {
     [DbContext(typeof(ShroomCityDbContext))]
-    partial class ShroomCityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231030114031_Changed Attribute Mushrooms relation to M-M for real this time")]
+    partial class ChangedAttributeMushroomsrelationtoMMforrealthistime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,36 +38,6 @@ namespace ShroomCity.API.Migrations
                     b.HasIndex("mushroomsId");
 
                     b.ToTable("AttributeMushroom");
-                });
-
-            modelBuilder.Entity("PermissionRole", b =>
-                {
-                    b.Property<int>("PermissionsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("PermissionsId", "RolesId");
-
-                    b.HasIndex("RolesId");
-
-                    b.ToTable("PermissionRole");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("UsersId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("rolesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("UsersId", "rolesId");
-
-                    b.HasIndex("rolesId");
-
-                    b.ToTable("RoleUser");
                 });
 
             modelBuilder.Entity("ShroomCity.Models.Entities.Attribute", b =>
@@ -163,7 +136,12 @@ namespace ShroomCity.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Permissions");
                 });
@@ -180,7 +158,12 @@ namespace ShroomCity.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Roles");
                 });
@@ -231,36 +214,6 @@ namespace ShroomCity.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PermissionRole", b =>
-                {
-                    b.HasOne("ShroomCity.Models.Entities.Permission", null)
-                        .WithMany()
-                        .HasForeignKey("PermissionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShroomCity.Models.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("ShroomCity.Models.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ShroomCity.Models.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("rolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ShroomCity.Models.Entities.Attribute", b =>
                 {
                     b.HasOne("ShroomCity.Models.Entities.AttributeType", "AttributeType")
@@ -278,6 +231,30 @@ namespace ShroomCity.API.Migrations
                     b.Navigation("AttributeType");
 
                     b.Navigation("RegisteredBy");
+                });
+
+            modelBuilder.Entity("ShroomCity.Models.Entities.Permission", b =>
+                {
+                    b.HasOne("ShroomCity.Models.Entities.Role", null)
+                        .WithMany("Permissions")
+                        .HasForeignKey("RoleId");
+                });
+
+            modelBuilder.Entity("ShroomCity.Models.Entities.Role", b =>
+                {
+                    b.HasOne("ShroomCity.Models.Entities.User", null)
+                        .WithMany("roles")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("ShroomCity.Models.Entities.Role", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("ShroomCity.Models.Entities.User", b =>
+                {
+                    b.Navigation("roles");
                 });
 #pragma warning restore 612, 618
         }

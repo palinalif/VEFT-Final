@@ -8,10 +8,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShroomCity.Models\ShroomCity.Models.csproj" />
+    <ProjectReference Include="..\ShroomCity.Utilities\ShroomCity.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
   </ItemGroup>
 
 </Project>

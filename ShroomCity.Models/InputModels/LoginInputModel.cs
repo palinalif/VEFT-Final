@@ -5,6 +5,7 @@ namespace ShroomCity.Models.InputModels;
 public class LoginInputModel
 {
     [Required]
+    [EmailAddress]
     public string EmailAddress { get; set; } = "";
     [Required]
     [MinLength(6)]
