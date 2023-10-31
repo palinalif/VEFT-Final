@@ -56,7 +56,14 @@ public class MushroomRepository : IMushroomRepository
 
     public async Task<bool> DeleteMushroomById(int mushroomId)
     {
-        throw new NotImplementedException();
+        var mushroom = _dbContext.Mushrooms.FirstOrDefault(m => m.Id == mushroomId);
+        if (mushroom == null)
+        {
+            return false;
+        }
+        _dbContext.Mushrooms.Remove(mushroom);
+        _dbContext.SaveChanges();
+        return true;
     }
 
     public async Task<MushroomDetailsDto?> GetMushroomById(int id)
@@ -86,6 +93,8 @@ public class MushroomRepository : IMushroomRepository
                 RegistrationDate = a.RegisteredBy.RegistrationDate
             })
         };
+        _dbContext.Mushrooms.Add(mushroom);
+        _dbContext.SaveChanges();
         return mushroomDto;
     }
 
@@ -96,6 +105,20 @@ public class MushroomRepository : IMushroomRepository
 
     public async Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var mushroom = _dbContext.Mushrooms.FirstOrDefault(m => m.Id == mushroomId);
+        if (mushroom == null)
+        {
+            return false;
+        }
+        if (inputModel.Name != null)
+        {
+            mushroom.Name = inputModel.Name;
+        }
+        if (inputModel.Description != null)
+        {
+            mushroom.Description = inputModel.Description;
+        }
+        _dbContext.SaveChanges();
+        return true;
     }
 }

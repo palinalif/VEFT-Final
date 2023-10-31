@@ -1,28 +1,37 @@
 using ShroomCity.Models.Dtos;
 using ShroomCity.Models.InputModels;
+using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
 
 namespace ShroomCity.Services.Implementations;
 
 public class ResearcherService : IResearcherService
 {
-    public Task<int?> CreateResearcher(string createdBy, ResearcherInputModel inputModel)
+    private readonly IResearcherRepository _researcherRepository;
+
+    public ResearcherService(IResearcherRepository researcherRepository)
     {
-        throw new NotImplementedException();
+        _researcherRepository = researcherRepository;
     }
 
-    public Task<IEnumerable<ResearcherDto>?> GetAllResearchers()
+
+    public async Task<int?> CreateResearcher(string createdBy, ResearcherInputModel inputModel)
     {
-        throw new NotImplementedException();
+        return await _researcherRepository.CreateResearcher(createdBy, inputModel);
     }
 
-    public Task<ResearcherDto?> GetResearcherByEmailAddress(string emailAddress)
+    public async Task<IEnumerable<ResearcherDto>?> GetAllResearchers()
     {
-        throw new NotImplementedException();
+        return await _researcherRepository.GetAllResearchers();
     }
 
-    public Task<ResearcherDto?> GetResearcherById(int id)
+    public async Task<ResearcherDto?> GetResearcherByEmailAddress(string emailAddress)
     {
-        throw new NotImplementedException();
+        return await _researcherRepository.GetResearcherByEmailAddress(emailAddress);
+    }
+
+    public async Task<ResearcherDto?> GetResearcherById(int id)
+    {
+        return await _researcherRepository.GetResearcherById(id);
     }
 }
