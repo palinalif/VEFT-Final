@@ -17,22 +17,22 @@ public class ResearchersController : ControllerBase
 
     [HttpGet]
     [Route("")]
-    public IActionResult GetAllResearchers()
-        => Ok(_researcherService.GetAllResearchers());
+    public async Task<IActionResult> GetAllResearchers()
+        => Ok(await _researcherService.GetAllResearchers());
     
     [HttpGet]
     [Route("{id}", Name = "ReadResearcher")]
-    public IActionResult GetResearcherById(int id)
+    public async Task<IActionResult> GetResearcherByIdAsync(int id)
     {
-        return Ok(_researcherService.GetResearcherById(id));
+        return Ok(await _researcherService.GetResearcherById(id));
     }
 
     [HttpPost]
     [Route("")]
-    public IActionResult CreateResearcher([FromBody] ResearcherInputModel inputModel)
+    public async Task<IActionResult> CreateResearcher([FromBody] ResearcherInputModel inputModel)
     {
         // TODO: get researcher... name?
-        var newResearcherId = _researcherService.CreateResearcher("", inputModel);
+        var newResearcherId = await _researcherService.CreateResearcher("", inputModel);
         return CreatedAtRoute("ReadResearcher", new { id = newResearcherId }, null);
     }
 }

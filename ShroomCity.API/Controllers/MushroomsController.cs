@@ -26,43 +26,43 @@ public class MushroomsController : ControllerBase
     [Authorize(Policy = "read:mushrooms")]
     [HttpGet]
     [Route("{id}", Name = "ReadMushroom")]
-    public IActionResult GetMushroomById(int id)
+    public async Task<IActionResult> GetMushroomById(int id)
     {
-        return Ok(_mushroomService.GetMushroomById(id));
+        return Ok(await _mushroomService.GetMushroomById(id));
     }
 
     //[Authorize(Policy = "read:mushrooms")]
     [HttpGet]
     [Route("lookup")]
-    public IActionResult GetLookupMushrooms([FromQuery] int pageSize = 25, [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetLookupMushroomsAsync([FromQuery] int pageSize = 25, [FromQuery] int pageNumber = 1)
     {
-        return Ok(_mushroomService.GetLookupMushrooms(pageSize, pageNumber));
+        return Ok(await _mushroomService.GetLookupMushrooms(pageSize, pageNumber));
     }
 
     [HttpPost]
     [Route("")]
-    public IActionResult CreateMushroom([FromBody] MushroomInputModel inputModel)
+    public async Task<IActionResult> CreateMushroom([FromBody] MushroomInputModel inputModel)
     {
         // TODO: Get researcher address
-        var newMushroomId = _mushroomService.CreateMushroom("", inputModel);
+        var newMushroomId = await _mushroomService.CreateMushroom("", inputModel);
         return CreatedAtRoute("ReadMushroom", new { id = newMushroomId }, null);
     }
 
     [HttpDelete]
     [Route("{id}")]
-    public IActionResult DeleteMushroom(int id)
+    public async Task<IActionResult> DeleteMushroom(int id)
     {
-        _mushroomService.DeleteMushroomById(id);
+        await _mushroomService.DeleteMushroomById(id);
         return Ok();
     }
 
     [HttpPost]
     [Route("{id}/research-entries")]
-    public IActionResult CreateResearchEntry(int id, [FromBody] ResearchEntryInputModel inputModel)
+    public async Task<IActionResult> CreateResearchEntry(int id, [FromBody] ResearchEntryInputModel inputModel)
     {
         // TODO: Get researcher address
         // var researcherEmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        _mushroomService.CreateResearchEntry(id, "", inputModel);
+        await _mushroomService.CreateResearchEntry(id, "", inputModel);
         return StatusCode(201);
     }
 }

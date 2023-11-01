@@ -127,13 +127,18 @@ public class MushroomService : IMushroomService
         return envelope;
     }
 
-    public Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel, bool performLookup)
+    public async Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel, bool performLookup)
     {
         if (performLookup)
         {
             // lookup should be performed to retrieve values from the external API to fill in the name, description and other attributes
             //(make new mushroom input model and discard the old one aside from the name?)
+            var lookupMushroom = await _externalMushroomService.GetMushroomByName(inputModel.Name);
+            if (lookupMushroom != null)
+            {
+                inputModel.Description = lookupMushroom.Description;
+            }
         }
-        return _mushroomRepository.UpdateMushroomById(mushroomId, inputModel);
+        return await _mushroomRepository.UpdateMushroomById(mushroomId, inputModel);
     }
 }
