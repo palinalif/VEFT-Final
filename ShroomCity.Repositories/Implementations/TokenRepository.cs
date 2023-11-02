@@ -1,21 +1,48 @@
+using Microsoft.VisualBasic;
+using ShroomCity.Models.Entities;
 using ShroomCity.Repositories.Interfaces;
 
 namespace ShroomCity.Repositories.Implementations;
 
 public class TokenRepository : ITokenRepository
 {
-    public Task BlacklistToken(int tokenId)
+    private readonly ShroomCityDbContext _dbContext;
+
+    public TokenRepository(ShroomCityDbContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
     }
 
-    public Task<int> AddToken(string token)
+
+    public async Task BlacklistToken(int tokenId)
     {
-        throw new NotImplementedException();
+        var token = _dbContext.JwtTokens.FirstOrDefault(t => t.Id == tokenId);
+        if (token == null)
+        {
+            throw new Exception("Token ID does not exist in database");
+        }
+        token.Blacklisted = true;
+        _dbContext.SaveChanges();
     }
 
-    public Task<bool> IsTokenBlacklisted(int tokenId)
+    public async Task<int> CreateToken()
     {
-        throw new NotImplementedException();
+        var entity = new JwtToken
+        {
+            Blacklisted = false
+        };
+        _dbContext.JwtTokens.Add(entity);
+        _dbContext.SaveChanges();
+        return entity.Id;
+    }
+
+    public async Task<bool> IsTokenBlacklisted(int tokenId)
+    {
+        var token = _dbContext.JwtTokens.FirstOrDefault(t => t.Id == tokenId);
+        if (token == null)
+        {
+            throw new Exception("Token ID does not exist in database");
+        }
+        return token.Blacklisted;
     }
 }

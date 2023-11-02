@@ -32,10 +32,8 @@ public class MushroomService : IMushroomService
         {
             attributes.Add(new AttributeDto
             {
-                // how to handle ID??
                 Value = color,
                 Type = "Color",
-                RegisteredBy = researcherEmailAddress,
                 RegistrationDate = DateTime.Now
             });
         }
@@ -44,10 +42,8 @@ public class MushroomService : IMushroomService
         {
             attributes.Add(new AttributeDto
             {
-                // how to handle ID??
                 Value = surface,
                 Type = "Surface",
-                RegisteredBy = researcherEmailAddress,
                 RegistrationDate = DateTime.Now
             });
         }
@@ -56,7 +52,6 @@ public class MushroomService : IMushroomService
         {
             attributes.Add(new AttributeDto
             {
-                // how to handle ID??
                 Value = shape,
                 Type = "Shape",
                 RegisteredBy = researcherEmailAddress,

@@ -25,7 +25,11 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterInputModel inputModel)
     {
         var newUserDto = await _accountService.Register(inputModel);
-        string token = _tokenService.GenerateJwtToken(newUserDto);
+        if (newUserDto == null)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError); // Something went wrong when creating a user
+        }
+        string token = await _tokenService.GenerateJwtToken(newUserDto);
         return Ok(token);
     }
 
@@ -34,7 +38,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> LoginAsync([FromBody] LoginInputModel inputModel)
     {
         var userDto = await _accountService.SignIn(inputModel);
-        string token = _tokenService.GenerateJwtToken(userDto);
+        string token = await _tokenService.GenerateJwtToken(userDto);
         return Ok(token);
     }
 

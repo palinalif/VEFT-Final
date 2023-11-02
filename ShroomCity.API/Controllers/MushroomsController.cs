@@ -17,13 +17,13 @@ public class MushroomsController : ControllerBase
         _mushroomService = mushroomService;
     }
     // TODO: Make all of these be authorized routes
-    [Authorize(Policy = "read:mushrooms")]
+    //[Authorize(Policy = "read:mushrooms")]
     [HttpGet]
     [Route("")]
     public IActionResult GetAllMushrooms([FromQuery] string? name, [FromQuery] int? min_stem_size, [FromQuery] int? max_stem_size, [FromQuery] int? min_cap_size, [FromQuery] int? max_cap_size, [FromQuery] string? color, [FromQuery] int pageSize = 25, [FromQuery] int pageNumber = 1)
         => Ok(_mushroomService.GetMushrooms(name, min_stem_size, max_stem_size, min_cap_size, max_cap_size, color, pageSize, pageNumber));
     
-    [Authorize(Policy = "read:mushrooms")]
+    //[Authorize(Policy = "read:mushrooms")]
     [HttpGet]
     [Route("{id}", Name = "ReadMushroom")]
     public async Task<IActionResult> GetMushroomById(int id)

@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ShroomCity.Models.Dtos;
@@ -24,20 +25,25 @@ public class AccountRepository : IAccountRepository
     {
         var hashedPassword = Hasher.HashPassword(inputModel.Password, _salt);
         var defaultRole = _dbContext.Roles.Include(r => r.Permissions).FirstOrDefault(r => r.Name == "Analyst");
+        if (defaultRole == null)
+        {
+            throw new Exception("Analyst role not found");
+        }
         if (_dbContext.Users.Any(u => u.EmailAddress == inputModel.EmailAddress))
         {
             // user already exists
             return null;
         }
+
         var entity = new User 
         {
             Name = inputModel.FullName,
             EmailAddress = inputModel.EmailAddress,
             HashedPassword = hashedPassword,
-            RegistrationDate = DateTime.Now,
+            RegistrationDate = DateTime.UtcNow,
             roles = new List<Role>()
         };
-        entity.roles.Append(defaultRole);
+        entity.roles.Add(defaultRole);
         _dbContext.Users.Add(entity);
         _dbContext.SaveChanges();
 
@@ -49,18 +55,13 @@ public class AccountRepository : IAccountRepository
             Email = entity.EmailAddress,
             Permissions = defaultRole.Permissions.Select(p => p.Code)
         };
-        Console.WriteLine("Analyst permissions:");
-        foreach (var perm in defaultRole.Permissions)
-        {
-            Console.WriteLine(perm);
-        }
         return userDto;
     }
 
     public async Task<UserDto?> SignIn(LoginInputModel inputModel)
     {
         var hashedPassword = Hasher.HashPassword(inputModel.Password, _salt);
-        var user = _dbContext.Users.FirstOrDefault(u => u.EmailAddress == inputModel.EmailAddress && u.HashedPassword == hashedPassword);
+        var user = _dbContext.Users.Include(u => u.roles).ThenInclude(r => r.Permissions).FirstOrDefault(u => u.EmailAddress == inputModel.EmailAddress && u.HashedPassword == hashedPassword);
         if (user == null)
         {
             return null;

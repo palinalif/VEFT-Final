@@ -24,7 +24,14 @@ public class AccountService : IAccountService
     public async Task<UserDto?> Register(RegisterInputModel inputModel)
     {
         var user = await _accountRepository.Register(inputModel);
-        return user;
+        if (user != null)
+        {
+            return user;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public async Task<UserDto?> SignIn(LoginInputModel inputModel)

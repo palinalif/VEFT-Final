@@ -43,10 +43,10 @@ public class TokenService : ITokenService
     private readonly ITokenRepository _tokenRepository;
     public TokenService(ITokenRepository tokenRepository, IConfiguration configuration)
     {
-        _signingKey = configuration["TokenAuthentication:Key"] ?? "";
-        _issuer = configuration["TokenAuthentication:Issuer"] ?? "";
-        _audience = configuration["TokenAuthentication:Audience"] ?? "";
-        if (int.TryParse(configuration["TokenAuthentication:DurationInMinutes"], out int expiration))
+        _signingKey = configuration["JwtSettings:Key"] ?? "";
+        _issuer = configuration["JwtSettings:Issuer"] ?? "";
+        _audience = configuration["JwtSettings:Audience"] ?? "";
+        if (int.TryParse(configuration["JwtSettings:DurationInMinutes"], out int expiration))
         {
             _expirationInMinutes = expiration;
         }
@@ -63,12 +63,14 @@ public class TokenService : ITokenService
     }
 
 
-    public string GenerateJwtToken(UserDto user)
+    public async Task<string> GenerateJwtToken(UserDto user)
     {
+        int tokenId = await _tokenRepository.CreateToken();
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.Email),
-            new("FullName", user.Name)
+            new("FullName", user.Name),
+            new("TokenId", tokenId.ToString())
         };
 
         var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
@@ -78,7 +80,6 @@ public class TokenService : ITokenService
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(_issuer, _audience, claimsPrincipal.Claims, expires: DateTime.Now.AddMinutes(_expirationInMinutes), signingCredentials: credentials);
         var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-        _tokenRepository.AddToken(jwtToken);
         return jwtToken;
     }
 
