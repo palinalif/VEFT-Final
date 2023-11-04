@@ -22,18 +22,22 @@ public class MushroomRepository : IMushroomRepository
         var attributeEntities = new List<Attribute>();
         foreach (var attribute in attributes)
         {
-            var user = _dbContext.Users.FirstOrDefault(u => u.EmailAddress == researcherEmailAddress);
-            if (user == null)
+            // find attributeType by name based on attributeDto's Type
+            var attributeType = _dbContext.AttributeTypes.FirstOrDefault(at => at.Type == attribute.Type);
+            if (attributeType == null)
             {
-                throw new Exception("Researcher does not exist");
+                // attributeType does not exist in database, create it
+                attributeType = new AttributeType
+                {
+                    Type = attribute.Type
+                };
+                _dbContext.AttributeTypes.Add(attributeType);
             }
-            var attributeType = _dbContext.Attributes.FirstOrDefault(a => a.Id == attribute.Id).AttributeType; // does this work??
             attributeEntities.Add(new Attribute
             {
                 Id = attribute.Id,
                 Value = attribute.Value,
-                AttributeType = attributeType, // find attribute with that name
-                RegisteredBy = user // find user with researcherEmailAddress
+                AttributeType = attributeType
             });
         }
 
@@ -51,7 +55,46 @@ public class MushroomRepository : IMushroomRepository
 
     public async Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var mushroom = _dbContext.Mushrooms
+        .Include(m => m.Attributes)
+            .ThenInclude(a => a.AttributeType)
+        .Include(m => m.Attributes)
+            .ThenInclude(a => a.RegisteredBy)
+        .FirstOrDefault(m => m.Id == mushroomId);
+
+        if (mushroom == null)
+        {
+            throw new Exception("Mushroom does not exist in database");
+            return false;
+        }
+
+        var user = _dbContext.Users.FirstOrDefault(u => u.EmailAddress == researcherEmailAddress);
+
+        var attributeEntities = new List<Attribute>();
+        foreach (var attribute in inputModel.Entries)
+        {
+            // find attributeType by name based on attributeDto's Type
+            var attributeType = _dbContext.AttributeTypes.FirstOrDefault(at => at.Type == attribute.Key);
+            if (attributeType == null)
+            {
+                // attributeType does not exist in database, create it
+                attributeType = new AttributeType
+                {
+                    Type = attribute.Key
+                };
+                _dbContext.AttributeTypes.Add(attributeType);
+            }
+            attributeEntities.Add(new Attribute
+            {
+                Value = attribute.Value,
+                AttributeType = attributeType,
+                RegisteredBy = user
+            });
+        }
+
+        // add attribute entries
+        mushroom.Attributes.Concat(attributeEntities);
+        return true;
     }
 
     public async Task<bool> DeleteMushroomById(int mushroomId)
@@ -89,18 +132,100 @@ public class MushroomRepository : IMushroomRepository
                 Id = a.Id,
                 Value = a.Value,
                 Type = a.AttributeType.Type,
-                RegisteredBy = a.RegisteredBy.EmailAddress,
-                RegistrationDate = a.RegisteredBy.RegistrationDate
+                RegisteredBy = a.RegisteredBy?.EmailAddress, // Some attributes don't have someone registered to them
+                RegistrationDate = a.RegisteredBy?.RegistrationDate
             })
         };
-        _dbContext.Mushrooms.Add(mushroom);
-        _dbContext.SaveChanges();
         return mushroomDto;
     }
 
-    public (int totalPages, IEnumerable<MushroomDto> mushrooms) GetMushroomsByCriteria(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize, int pageNumber)
+    public (int totalPages, IEnumerable<MushroomDto> mushrooms) GetMushroomsByCriteria(
+        string? name, 
+        int? stemSizeMinimum, 
+        int? stemSizeMaximum, 
+        int? capSizeMinimum, 
+        int? capSizeMaximum, 
+        string? color, 
+        int pageSize, 
+        int pageNumber)
     {
-        throw new NotImplementedException();
+        // Start with a base query
+        var query = _dbContext.Mushrooms
+        .Include(m => m.Attributes)
+            .ThenInclude(a => a.AttributeType)
+        .Include(m => m.Attributes)
+            .ThenInclude(a => a.RegisteredBy)
+        .AsQueryable();
+
+        // Apply filters
+        if (!string.IsNullOrEmpty(name))
+        {
+            query = query.Where(m => m.Name.Contains(name));
+        }
+
+        if (stemSizeMinimum.HasValue)
+        {
+            // TODO: Get average of stem size and compare it to that
+           query = query
+            .Where(m => m.Attributes
+                .Where(a => a.AttributeType.Type == "Stem Size")
+                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                .Average(a => a.size) >= stemSizeMinimum.Value);
+        }
+
+        if (stemSizeMaximum.HasValue)
+        {
+            // TODO: Get average of stem size and compare it to that
+            query = query
+            .Where(m => m.Attributes
+                .Where(a => a.AttributeType.Type == "Stem Size")
+                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                .Average(a => a.size) <= stemSizeMaximum.Value);
+        }
+
+        if (capSizeMinimum.HasValue)
+        {
+            // TODO: Get average of cap size and compare it to that
+            query = query
+            .Where(m => m.Attributes
+                .Where(a => a.AttributeType.Type == "Cap Size")
+                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                .Average(a => a.size) >= capSizeMinimum.Value);
+        }
+
+        if (capSizeMaximum.HasValue)
+        {
+            // TODO: Get average of cap size and compare it to that
+            query = query
+            .Where(m => m.Attributes
+                .Where(a => a.AttributeType.Type == "Cap Size")
+                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                .Average(a => a.size) <= capSizeMaximum.Value);
+        }
+
+
+        if (!string.IsNullOrEmpty(color))
+        {
+            query = query.Where(m => m.Attributes.Any(a => a.AttributeType.Type == "Color" && a.Value == color));
+        }
+
+        int totalItemCount = query.Count();
+        int totalPages = (int)Math.Ceiling(totalItemCount / (double)pageSize);
+
+        // Apply paging
+        var mushrooms = query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(m => new MushroomDto
+            {
+                Id = m.Id,
+                Name = m.Name,
+                Description = m.Description,
+            })
+            .ToList(); // Execute the query and convert to list
+
+        // Return the result as a tuple
+        return (totalPages, mushrooms);
     }
 
     public async Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel)

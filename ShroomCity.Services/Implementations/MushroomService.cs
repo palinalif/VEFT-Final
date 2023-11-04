@@ -25,8 +25,13 @@ public class MushroomService : IMushroomService
         var mushroom = await _externalMushroomService.GetMushroomByName(inputModel.Name);
         if (mushroom == null)
         {
-            throw new Exception($"Mushroom with name {inputModel.Name} not found");
+            // Create mushroom only with given values
+            throw new NotImplementedException();
         }
+        Console.WriteLine("External mushroom found!");
+        Console.WriteLine(mushroom.Name);
+        Console.WriteLine(mushroom.Description);
+
         var attributes = new List<AttributeDto>();
         foreach (var color in mushroom.Colors)
         {
@@ -54,7 +59,6 @@ public class MushroomService : IMushroomService
             {
                 Value = shape,
                 Type = "Shape",
-                RegisteredBy = researcherEmailAddress,
                 RegistrationDate = DateTime.Now
             });
         }
@@ -64,7 +68,7 @@ public class MushroomService : IMushroomService
 
     public async Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel)
     {
-        return await CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
+        return await _mushroomRepository.CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
     }
 
     public async Task<bool> DeleteMushroomById(int mushroomId)
@@ -128,10 +132,13 @@ public class MushroomService : IMushroomService
         {
             // lookup should be performed to retrieve values from the external API to fill in the name, description and other attributes
             //(make new mushroom input model and discard the old one aside from the name?)
-            var lookupMushroom = await _externalMushroomService.GetMushroomByName(inputModel.Name);
-            if (lookupMushroom != null)
+            if (inputModel.Name != null)
             {
-                inputModel.Description = lookupMushroom.Description;
+                var lookupMushroom = await _externalMushroomService.GetMushroomByName(inputModel.Name);
+                if (lookupMushroom != null)
+                {
+                    inputModel.Description = lookupMushroom.Description;
+                }
             }
         }
         return await _mushroomRepository.UpdateMushroomById(mushroomId, inputModel);

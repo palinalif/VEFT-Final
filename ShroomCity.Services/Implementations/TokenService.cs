@@ -70,8 +70,12 @@ public class TokenService : ITokenService
         {
             new(ClaimTypes.Name, user.Email),
             new("FullName", user.Name),
-            new("TokenId", tokenId.ToString())
+            new("TokenId", tokenId.ToString()),
         };
+        foreach (var permission in user.Permissions)
+        {
+            claims.Add(new("permissions", permission));
+        }
 
         var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
