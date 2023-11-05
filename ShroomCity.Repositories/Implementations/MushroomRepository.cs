@@ -64,7 +64,6 @@ public class MushroomRepository : IMushroomRepository
 
         if (mushroom == null)
         {
-            throw new Exception("Mushroom does not exist in database");
             return false;
         }
 
@@ -93,7 +92,8 @@ public class MushroomRepository : IMushroomRepository
         }
 
         // add attribute entries
-        mushroom.Attributes.Concat(attributeEntities);
+        mushroom.Attributes = mushroom.Attributes.Concat(attributeEntities).ToList();
+        _dbContext.SaveChanges();
         return true;
     }
 
@@ -165,42 +165,42 @@ public class MushroomRepository : IMushroomRepository
 
         if (stemSizeMinimum.HasValue)
         {
-            // TODO: Get average of stem size and compare it to that
-           query = query
-            .Where(m => m.Attributes
-                .Where(a => a.AttributeType.Type == "Stem Size")
-                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
-                .Average(a => a.size) >= stemSizeMinimum.Value);
+            query = query
+                .Where(m => m.Attributes.Any(a => a.AttributeType.Type == "StemSize") && 
+                            m.Attributes
+                            .Where(a => a.AttributeType.Type == "StemSize")
+                            .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                            .Average(a => a.size) >= stemSizeMinimum.Value);
         }
 
         if (stemSizeMaximum.HasValue)
         {
-            // TODO: Get average of stem size and compare it to that
             query = query
-            .Where(m => m.Attributes
-                .Where(a => a.AttributeType.Type == "Stem Size")
-                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
-                .Average(a => a.size) <= stemSizeMaximum.Value);
+                .Where(m => m.Attributes.Any(a => a.AttributeType.Type == "StemSize") && 
+                            m.Attributes
+                            .Where(a => a.AttributeType.Type == "StemSize")
+                            .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                            .Average(a => a.size) <= stemSizeMaximum.Value);
         }
 
         if (capSizeMinimum.HasValue)
         {
-            // TODO: Get average of cap size and compare it to that
             query = query
-            .Where(m => m.Attributes
-                .Where(a => a.AttributeType.Type == "Cap Size")
-                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
-                .Average(a => a.size) >= capSizeMinimum.Value);
+                .Where(m => m.Attributes.Any(a => a.AttributeType.Type == "CapSize") && 
+                            m.Attributes
+                            .Where(a => a.AttributeType.Type == "CapSize")
+                            .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                            .Average(a => a.size) >= capSizeMinimum.Value);
         }
 
         if (capSizeMaximum.HasValue)
         {
-            // TODO: Get average of cap size and compare it to that
             query = query
-            .Where(m => m.Attributes
-                .Where(a => a.AttributeType.Type == "Cap Size")
-                .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
-                .Average(a => a.size) <= capSizeMaximum.Value);
+                .Where(m => m.Attributes.Any(a => a.AttributeType.Type == "CapSize") && 
+                            m.Attributes
+                            .Where(a => a.AttributeType.Type == "CapSize")
+                            .Select(a => new { size = a.Value != null ? (int?)int.Parse(a.Value) : null })
+                            .Average(a => a.size) <= capSizeMaximum.Value);
         }
 
 
@@ -224,7 +224,6 @@ public class MushroomRepository : IMushroomRepository
             })
             .ToList(); // Execute the query and convert to list
 
-        // Return the result as a tuple
         return (totalPages, mushrooms);
     }
 

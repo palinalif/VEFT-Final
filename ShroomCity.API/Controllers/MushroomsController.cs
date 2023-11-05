@@ -31,6 +31,22 @@ public class MushroomsController : ControllerBase
         return Ok(await _mushroomService.GetMushroomById(id));
     }
 
+    [Authorize(Policy = "write:mushrooms")]
+    [HttpPut]
+    [Route("{id}", Name = "ReadMushroom")]
+    public async Task<IActionResult> UpdateMushroomById(int id, [FromBody] MushroomUpdateInputModel inputModel, [FromQuery] bool lookup)
+    {
+        var result = await _mushroomService.UpdateMushroomById(id, inputModel, lookup);
+        if (result)
+        {
+            return Ok();
+        }
+        else
+        {
+            return StatusCode(StatusCodes.Status404NotFound);
+        }
+    }
+
     [Authorize(Policy = "read:mushrooms")]
     [HttpGet]
     [Route("lookup")]
@@ -45,7 +61,6 @@ public class MushroomsController : ControllerBase
     public async Task<IActionResult> CreateMushroom([FromBody] MushroomInputModel inputModel)
     {
         var researcherEmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        Console.WriteLine($"Researcher email: {researcherEmailAddress}");
         var newMushroomId = await _mushroomService.CreateMushroom(researcherEmailAddress, inputModel);
         return CreatedAtRoute("ReadMushroom", new { id = newMushroomId }, null);
     }
@@ -55,17 +70,28 @@ public class MushroomsController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> DeleteMushroom(int id)
     {
-        await _mushroomService.DeleteMushroomById(id);
-        return Ok();
+        var result = await _mushroomService.DeleteMushroomById(id);
+        if (result)
+        {
+            return Ok();
+        }
+        else
+        {
+            return StatusCode(StatusCodes.Status404NotFound);
+        }
     }
 
+    [Authorize(Policy = "write:mushrooms")]
     [HttpPost]
     [Route("{id}/research-entries")]
     public async Task<IActionResult> CreateResearchEntry(int id, [FromBody] ResearchEntryInputModel inputModel)
     {
-        // TODO: Get researcher address
-        // var researcherEmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        await _mushroomService.CreateResearchEntry(id, "", inputModel);
-        return StatusCode(201);
+        var researcherEmailAddress = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        var result = await _mushroomService.CreateResearchEntry(id, researcherEmailAddress, inputModel);
+        if (result)
+        {
+            return StatusCode(201);
+        }
+        return StatusCode(400);
     }
 }

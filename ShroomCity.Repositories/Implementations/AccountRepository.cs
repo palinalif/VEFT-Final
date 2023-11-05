@@ -41,6 +41,7 @@ public class AccountRepository : IAccountRepository
             EmailAddress = inputModel.EmailAddress,
             HashedPassword = hashedPassword,
             RegistrationDate = DateTime.UtcNow,
+            Bio = inputModel.Bio,
             roles = new List<Role>()
         };
         entity.roles.Add(defaultRole);
@@ -53,6 +54,7 @@ public class AccountRepository : IAccountRepository
             Id = entity.Id,
             Name = entity.Name,
             Email = entity.EmailAddress,
+            Bio = inputModel.Bio,
             Permissions = defaultRole.Permissions.Select(p => p.Code)
         };
         return userDto;

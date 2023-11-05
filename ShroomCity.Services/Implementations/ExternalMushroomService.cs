@@ -10,9 +10,17 @@ public class ExternalMushroomService : IExternalMushroomService
     static readonly HttpClient client = new HttpClient();
     public async Task<ExternalMushroomDto?> GetMushroomByName(string name)
     {
-        string responseBody = await client.GetStringAsync($"https://mushrooms-api-a309dd19945c.herokuapp.com/mushrooms/{name}");
-        var mushroom = JsonSerializer.Deserialize<ExternalMushroomDto>(responseBody);
-        return mushroom;
+        try
+        {
+            string responseBody = await client.GetStringAsync($"https://mushrooms-api-a309dd19945c.herokuapp.com/mushrooms/{name}");
+            var mushroom = JsonSerializer.Deserialize<ExternalMushroomDto>(responseBody);
+            return mushroom;
+        }
+        catch (HttpRequestException)
+        {
+            return null; // Mushroom not found
+        }
+        
     }
 
     public async Task<Envelope<ExternalMushroomDto>?> GetMushrooms(int pageSize, int pageNumber)

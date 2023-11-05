@@ -26,12 +26,9 @@ public class MushroomService : IMushroomService
         if (mushroom == null)
         {
             // Create mushroom only with given values
-            throw new NotImplementedException();
+            return await _mushroomRepository.CreateMushroom(inputModel, researcherEmailAddress, new List<AttributeDto>());
         }
-        Console.WriteLine("External mushroom found!");
-        Console.WriteLine(mushroom.Name);
-        Console.WriteLine(mushroom.Description);
-
+        
         var attributes = new List<AttributeDto>();
         foreach (var color in mushroom.Colors)
         {
@@ -63,6 +60,7 @@ public class MushroomService : IMushroomService
             });
         }
 
+        inputModel.Description = mushroom.Description;
         return await _mushroomRepository.CreateMushroom(inputModel, researcherEmailAddress, attributes);
     }
 

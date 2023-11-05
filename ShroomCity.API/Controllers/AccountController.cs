@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Mvc;
+using Mono.TextTemplating;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Services.Implementations;
 using ShroomCity.Services.Interfaces;
@@ -27,7 +29,7 @@ public class AccountController : ControllerBase
         var newUserDto = await _accountService.Register(inputModel);
         if (newUserDto == null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError); // Something went wrong when creating a user
+            return StatusCode(StatusCodes.Status401Unauthorized); // Something went wrong when creating a user
         }
         string token = await _tokenService.GenerateJwtToken(newUserDto);
         return Ok(token);
@@ -46,9 +48,14 @@ public class AccountController : ControllerBase
     [Route("logout")]
     public async Task<IActionResult> LogoutAsync()
     {
-        // get id of currently logged in user somehow
-        int tokenId = 1; // so there aren't errors, change later
-        await _accountService.SignOut(tokenId);
+        var tokenId = User.Claims.FirstOrDefault(c => c.Type == "TokenId")?.Value;
+        if (tokenId == null)
+        {
+            // No one is logged in
+            return StatusCode(StatusCodes.Status401Unauthorized);
+        }
+        var intTokenId = Int32.Parse(tokenId);
+        await _accountService.SignOut(intTokenId);
         return Ok();
     }
 
@@ -56,10 +63,11 @@ public class AccountController : ControllerBase
     [Route("profile")]
     public async Task<IActionResult> GetProfileInformation()
     {
-        if (User.Claims != null)
+        if (User.Claims.Any())
         {
+            // This gives an error
             return Ok(User.Claims);
         }
-        return Ok(); // TODO: Replace with appropriate status code
+        return StatusCode(StatusCodes.Status401Unauthorized);
     }
 }
